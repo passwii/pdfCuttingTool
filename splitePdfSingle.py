@@ -23,4 +23,4 @@ for page_no in range(len(pdfReader.pages)):
 
     with open(outfile, 'wb') as output_pdf:
         pdf_writer.write(output_pdf)
-print('PDF Split Done')
+print('PDF 拆分, Done')

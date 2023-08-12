@@ -1,6 +1,6 @@
 from PyPDF2 import PdfWriter, PdfReader
 
-reader = PdfReader("inputs/package.pdf")
+reader = PdfReader("inputs/tmp.pdf")
 writer = PdfWriter()
 
 page1 = reader.pages[0]

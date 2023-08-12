@@ -23,3 +23,4 @@ outfile = os.path.join(outDir, file)
 with open(outfile, 'wb') as output_pdf:
     pdf_writer.write(output_pdf)
 
+print('PDF 按页拆分, Done')
