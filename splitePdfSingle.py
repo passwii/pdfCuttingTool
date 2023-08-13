@@ -5,10 +5,6 @@ import os
 inDir = r'inputs'
 outDir = r'outputs\{packageID}'.format(packageID='package-FBA1781SY190')
 
-# print all file name under inputs folder
-for file in os.listdir(inDir):
-    print(file)
-
 pdfReader = PdfReader(os.path.join(inDir, "tmp.pdf"))
 
 print(len(pdfReader.pages))
