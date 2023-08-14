@@ -1,43 +1,49 @@
 from PyPDF2 import PdfWriter, PdfReader
 import os
 
-inDir = r'inputs'
-outDir = r'outputs\{packageID}'.format(packageID='package-FBA1781SY190')
+reader = PdfReader("inputs/tmp.pdf")
+writer = PdfWriter()
+page = reader.pages[0]
 
-inFile = os.path.join(inDir, r'{packageID}.pdf'.format(packageID='package-FBA1791SY190'))
-pdf_reader = PdfReader(inFile)
+x01 = page.cropbox.lower_left[0]
+x02 = page.cropbox.lower_right[0]
+y01 = page.cropbox.lower_left[1]
+y02 = page.cropbox.upper_left[1]
 
-page = pdf_reader.pages[0]
-num_pages = len(pdf_reader.pages)
-pageNo = 1
-# static refs
-x1 = page.cropbox.lower_left[0]
-x2 = page.cropbox.lower_right[0]
-y1 = page.cropbox.lower_left[1]
-y2 = page.cropbox.upper_left[1]
-width = (x2 - x1) / 2
-height = (y2 - y1) / 3
+freshPageCo1 = page.cropbox.lower_left = (x01, y01 + 35)
+freshPageCo2 = page.cropbox.upper_right = (x02, y02 - 35)
+
+page = writer.add_page(page)
+x1 = page.cropbox.lower_left[0] # 0
+x2 = page.cropbox.lower_right[0] #612
+y1 = page.cropbox.lower_left[1] #35
+y2 = page.cropbox.upper_left[1] #757
+
+width = round((x2 - x1) / 2, 2) # 306
+height = round((y2 - y1) / 3, 2) #240
+
 labelID = 1
+# print('width', width, 'height', height)
+# print('PDF 按标签拆分, Start')
+for pages in range(len(reader.pages)):
+    for cols in range(2): # 0开始
+        for rows in range(3): # 0 - 1 - 2递增
+            label_x1 = x1 + cols * width
+            label_y1 = y1 + (2 - rows) * height
+            label_x2 = label_x1 + width
+            label_y2 = label_y1 + height
 
+            page.cropbox.lower_left = (label_x1, label_y1)
+            page.cropbox.upper_right = (label_x2, label_y2)
 
-# for pages in range(num_pages):
-for cols in range(2):
-    for rows in range(3):
-        label_x1 = x1 + cols * width
-        label_y1 = y1 + rows * height
-        label_x2 = label_x1 + width
-        label_y2 = label_y1 + height
+            outFile = os.path.join("outputs\package-FBA1781SY190",
+                                   r'{package}_L{label}.pdf'.format(
+                                       package='package-FBA1791SY190', label=labelID))
+            labelID += 1
 
-        page.cropbox.lower_left = (label_x1, label_y1 + 20)
-        page.cropbox.upper_right = (label_x2, label_y2 + 20)
-
-        outFile = os.path.join(outDir, r'{package}_P{page}_L{label}.pdf'.format(package='package-FBA1791SY190', page=pageNo, label=labelID))
-        labelID += 1
-
-        with open(outFile, 'wb') as output_pdf:
-            pdf_writer = PdfWriter()
-            pdf_writer.add_page(page)
-            pdf_writer.write(output_pdf)
-    # pageNo += 1
+            with open(outFile, 'wb') as output_pdf:
+                pdf_writer = PdfWriter()
+                pdf_writer.add_page(page)
+                pdf_writer.write(output_pdf)
 
 print('PDF 按标签拆分, Done')
