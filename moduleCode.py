@@ -15,6 +15,6 @@ writer.add_page(page3)
 
 writer.add_js("this.print({bUI:true,bSilent:false,bShrinkToFit:true});")
 
-# write to document-output.pdf
-with open("PyPDF2-output.pdf", "wb") as fp:
+# write to document-box_1.pdf
+with open("PyPDF2-box_1.pdf", "wb") as fp:
     writer.write(fp)

@@ -1,7 +1,7 @@
 from PyPDF2 import PdfWriter, PdfReader
 import os
 
-reader = PdfReader("inputs/output.pdf")
+reader = PdfReader("inputs/box_1.pdf")
 writer = PdfWriter()
 page = reader.pages[0]
 
